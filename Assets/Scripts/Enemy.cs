@@ -20,6 +20,9 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        // Esperar hasta que el GameManager haya terminado la pantalla de carga
+        if (GameManager.instance.doingSetup) return;
+
         if (target == null) return;
 
         // 1) Calculamos distancia al jugador

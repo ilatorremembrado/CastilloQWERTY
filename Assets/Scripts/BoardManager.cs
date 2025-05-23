@@ -54,7 +54,7 @@ public class BoardManager : MonoBehaviour
         InitializeList();
 
         int enemyCount = Mathf.FloorToInt(Mathf.Log(level, 2f)) + 1;
-        LayoutObjectAtRandom(enemyTiles, enemyCount, enemyCount);
+        LayoutEnemiesAtEdges(enemyTiles, enemyCount);
 
         // Aquí puedes instanciar la salida si deseas
         // Instantiate(exitPrefab, new Vector2(columns - 1, rows - 1), Quaternion.identity);
@@ -80,6 +80,46 @@ public class BoardManager : MonoBehaviour
                 GameObject instance = Instantiate(toInstantiate, new Vector2(x, y), Quaternion.identity);
                 instance.transform.SetParent(boardHolder);
             }
+        }
+    }
+
+    List<Vector2> GetEdgePositions()
+    {
+        List<Vector2> edgePositions = new List<Vector2>();
+
+        // Añadir columnas horizontales (arriba y abajo)
+        for (int x = 1; x < columns - 1; x++)
+        {
+            edgePositions.Add(new Vector2(x, 0));            // borde inferior
+            edgePositions.Add(new Vector2(x, rows - 1));     // borde superior
+        }
+
+        // Añadir filas verticales (izquierda y derecha)
+        for (int y = 1; y < rows - 1; y++)
+        {
+            edgePositions.Add(new Vector2(0, y));            // borde izquierdo
+            edgePositions.Add(new Vector2(columns - 1, y));  // borde derecho
+        }
+
+        return edgePositions;
+    }
+
+
+    void LayoutEnemiesAtEdges(GameObject[] tileArray, int count)
+    {
+        List<Vector2> edgePositions = GetEdgePositions();
+
+        for (int i = 0; i < count && edgePositions.Count > 0; i++)
+        {
+            int index = Random.Range(0, edgePositions.Count);
+            Vector2 pos = edgePositions[index];
+            edgePositions.RemoveAt(index);
+
+            GameObject enemyPrefab = GetRandomInArray(tileArray);
+            GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
+            enemy.transform.SetParent(boardHolder);
+            Debug.Log("Enemigo creado en: " + pos);
+
         }
     }
 
