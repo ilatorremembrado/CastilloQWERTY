@@ -12,53 +12,69 @@ public class Enemy : MovingObject
     protected override void Awake()
     {
         animator = GetComponent<Animator>();
-        base.Awake();
-    }
-
-    protected override void Start()
-    {
-        //añado los enemigos a la lista de gamemanager al crearlos
-        GameManager.instance.AddEnemyToList(this);
         target = GameObject.FindGameObjectWithTag("Player").transform; //asigno la referencia del jugador
-        base.Start(); //mantiene el start de la clase principal
+                                                                       // base.Start(); //mantiene el start de la clase principal
     }
 
-    protected override void AttemptMove(int xDir, int yDir)
+    void Update()
     {
-        if (skipMove)
-        {
-            skipMove = false;
-            return;
-        }
-        base.AttemptMove(xDir, yDir);
-        skipMove = true;
-    }
+        // Esperar hasta que el GameManager haya terminado la pantalla de carga
+        if (GameManager.instance.doingSetup) return;
 
-    public void MoveEnemy()
-    {
-        int xDir = 0;
-        int yDir = 0;
-        //si están en la misma columna el enemigo se mueve en vertical hacia donde está el jugador
-        if(Math.Abs(target.position.x - transform.position.x) < float.Epsilon)
+        if (target == null) return;
+
+        // 1) Calculamos distancia al jugador
+        float dist = Vector2.Distance(transform.position, target.position);
+
+        if (dist > stoppingDistance)
         {
-            yDir = target.position.y > transform.position.y ? 1 : -1;
+            // 2) Solo mientras estemos fuera de stoppingDistance avanzamos
+            Vector2 direction = (target.position - transform.position).normalized;
+            rb2D.linearVelocity = direction * moveSpeed; // <— usa velocity en vez de linearVelocity
+            animator.SetTrigger("enemyMove");
+
+            // Flip del sprite
+            Vector3 scale = transform.localScale;
+            scale.x = direction.x > 0
+                      ? Mathf.Abs(scale.x)
+                      : -Mathf.Abs(scale.x);
+            transform.localScale = scale;
         }
-        //si no están en la misma columna se moverá en horizontal
         else
         {
             xDir = target.position.x > transform.position.x ? 1 : -1;
         }
-        animator.SetTrigger("enemyMove");
-        AttemptMove(xDir, yDir);
     }
 
-    protected override void OnCantMove(GameObject go)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        Player hitPlayer = go.GetComponent<Player>();
-        if(hitPlayer != null)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            hitPlayer.LoseLife(playerDamage);
-            animator.SetTrigger("enemyAttack1");
+            // esto solo ocurre si colisionan físicamente,
+            // y como ya no avanzamos hasta superponernos, 
+            // solo pasarás a esta parte si el Player te empuja.
+            Player hitPlayer = collision.gameObject.GetComponent<Player>();
+            if (hitPlayer != null)
+            {
+                hitPlayer.LoseLife(playerDamage);
+                animator.SetTrigger("enemyAttack1");
+            }
         }
     }
+    
+    public void ReceiveDamage(int amount)
+    {
+        animator.SetTrigger("enemyHurt");
+    }
+
+    public void TriggerAttackAnimation()
+    {
+        animator.SetTrigger("enemyAttack1");
+    }
+
+    public void TriggerDeathAnimation()
+    {
+        animator.SetTrigger("enemyDeath");
+    }
+
 }

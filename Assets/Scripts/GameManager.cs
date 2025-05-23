@@ -25,8 +25,8 @@ public class GameManager : MonoBehaviour
     private List<Enemy> enemies = new List<Enemy>();
     private bool enemiesMoving;
 
-    //los objetos referentes a la pantalla de información previa a cada partida se crean y se destruyen en cada partida para cambiar los siguientes valores
-    private int level = 0;
+//los objetos referentes a la pantalla de información previa a cada partida se crean y se destruyen en cada partida para cambiar los siguientes valores
+    private int level = 3;
     private GameObject levelImage;
     private Text levelText;
     public bool doingSetup;
