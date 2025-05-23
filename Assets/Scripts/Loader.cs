@@ -1,7 +1,7 @@
 // mira que GameManager esté creado en la jerarquía, si no está lo instancia
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class Loader : MonoBehaviour
 {
     public GameObject gameManager;
 

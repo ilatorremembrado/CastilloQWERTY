@@ -1,19 +1,21 @@
-using System;
 using UnityEngine;
 
-public class Enemy : MovingObject
+public class Enemy : MonoBehaviour
 {
-    public int playerDamage;
+    public float moveSpeed = 1f;
+    public float stoppingDistance = 1f;
+    public int playerDamage = 10;
 
-    private Animator animator;
     private Transform target;
-    private bool skipMove; //los enemigos se mueven un turno si y uno no
+    private Rigidbody2D rb2D;
+    private Animator animator;
 
-    protected override void Awake()
+    void Start()
     {
+        rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         target = GameObject.FindGameObjectWithTag("Player").transform; //asigno la referencia del jugador
-                                                                       // base.Start(); //mantiene el start de la clase principal
+// base.Start(); //mantiene el start de la clase principal
     }
 
     void Update()
@@ -30,19 +32,20 @@ public class Enemy : MovingObject
         {
             // 2) Solo mientras estemos fuera de stoppingDistance avanzamos
             Vector2 direction = (target.position - transform.position).normalized;
-            rb2D.linearVelocity = direction * moveSpeed; // <— usa velocity en vez de linearVelocity
+            rb2D.linearVelocity      = direction * moveSpeed; // <— usa velocity en vez de linearVelocity
             animator.SetTrigger("enemyMove");
 
             // Flip del sprite
             Vector3 scale = transform.localScale;
-            scale.x = direction.x > 0
-                      ? Mathf.Abs(scale.x)
+            scale.x = direction.x > 0 
+                      ? Mathf.Abs(scale.x) 
                       : -Mathf.Abs(scale.x);
             transform.localScale = scale;
         }
         else
         {
-            xDir = target.position.x > transform.position.x ? 1 : -1;
+            // 3) Cuando llegamos a stoppingDistance, paramos
+            rb2D.linearVelocity = Vector2.zero;
         }
     }
 
@@ -61,20 +64,4 @@ public class Enemy : MovingObject
             }
         }
     }
-    
-    public void ReceiveDamage(int amount)
-    {
-        animator.SetTrigger("enemyHurt");
-    }
-
-    public void TriggerAttackAnimation()
-    {
-        animator.SetTrigger("enemyAttack1");
-    }
-
-    public void TriggerDeathAnimation()
-    {
-        animator.SetTrigger("enemyDeath");
-    }
-
 }
