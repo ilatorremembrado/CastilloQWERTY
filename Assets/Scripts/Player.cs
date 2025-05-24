@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
     }
 
 	// futuras implementaciones con alimentos o recompensas
-    private void OnTriggerEnter2D(Collider2D collision)
+    /*private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Exit"))
         {
@@ -109,5 +109,5 @@ public class Player : MonoBehaviour
             livesText.text = "+" + pointsPerWord + " Food: " + life;
             collision.gameObject.SetActive(false);
         }
-    }
+    }*/
 }
