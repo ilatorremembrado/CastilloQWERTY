@@ -11,13 +11,13 @@ public class GameManager : MonoBehaviour
 	public bool doingSetup;
 
 //los objetos referentes a la pantalla de información previa a cada partida se crean y se destruyen en cada partida para cambiar los siguientes valores
-    private int level = 0;
+    private int level = 3;
     private GameObject levelImage;
     private Text levelText;
 
     void Awake()
     {
-	//singleton: permite acceder al gamemanager desde cualquier script usando la variable instance
+	    //singleton: permite acceder al gamemanager desde cualquier script usando la variable instance
         if (instance == null)
         {
             instance = this;
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-	//para que el gamemanager no se destruya al generar otra escena o recargar la misma
+	    //para que el gamemanager no se destruya al generar otra escena o recargar la misma
         DontDestroyOnLoad(gameObject);
         boardScript = GetComponent<BoardManager>();
     }
@@ -50,31 +50,34 @@ public class GameManager : MonoBehaviour
 
     void InitGame()
     {
-	// prepara la pantalla prejuego
-	doingSetup = true; // para que el jugador no se pueda mover mientras se prepara la escena
+	    // prepara la pantalla prejuego
+	    doingSetup = true; // para que el jugador no se pueda mover mientras se prepara la escena
         levelImage = GameObject.Find("LevelImage");
-        levelText = GameObject.Find("LevelText").GetComponent<Text>();
+        levelText = GameObject.Find("LevelText")?.GetComponent<Text>();
 
-        levelText.text = "Day " + level;
-        levelImage.SetActive(true);
+        if (levelText != null) levelText.text = "Day " + level;
+        if (levelImage != null) levelImage.SetActive(true);
 
-	// prepara escena juego
+	    // prepara escena juego
         boardScript.SetupScene(level);
 
-	//en (levelStartDelay) segundos se genera el método (HideLevelImage)
+	    //en (levelStartDelay) segundos se genera el método (HideLevelImage)
         Invoke("HideLevelImage", 2f);
     }
 
     void HideLevelImage()
     {
-        levelImage.SetActive(false);
-	doingSetup = false;
+        if (levelImage != null) levelImage.SetActive(false);
+	    doingSetup = false;
     }
 
     public void GameOver()
     {
-        levelText.text = "After " + level + " days, you starved.";
-        levelImage.SetActive(true);
+        doingSetup = true;
+
+        if (levelText != null) levelText.text = "After " + level + " days, you starved.";
+        if (levelImage != null) levelImage.SetActive(true);
+
         Time.timeScale = 0f;
     }
 }

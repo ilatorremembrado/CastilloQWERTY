@@ -28,12 +28,17 @@ public class Player : MonoBehaviour
 	// se llama al método una vez por frame
     void Update()
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
+        if (GameManager.instance.doingSetup) return;
 
-	// para evitar el movimiento en diagonal
-        if (moveX != 0)
-            moveY = 0;
+        float moveX = 0, moveY = 0;
+
+        if (Input.GetKey(KeyCode.LeftArrow)) moveX = -1;
+        else if (Input.GetKey(KeyCode.RightArrow)) moveX = 1;
+
+        if (Input.GetKey(KeyCode.UpArrow)) moveY = 1;
+        else if (Input.GetKey(KeyCode.DownArrow)) moveY = -1;
+
+        if (moveX != 0) moveY = 0;
 
         Vector2 movement = new Vector2(moveX, moveY).normalized;
         rb2D.linearVelocity = movement * moveSpeed;
@@ -42,7 +47,6 @@ public class Player : MonoBehaviour
         {
             animator.SetTrigger("playerRun");
 
-            // Cambiar dirección del sprite
             Vector2 scale = transform.localScale;
             scale.x = moveX > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
             transform.localScale = scale;

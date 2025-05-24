@@ -13,7 +13,7 @@ public class BoardManager : MonoBehaviour
     private Transform boardHolder;
     private List<Vector2> gridPositions = new List<Vector2>(); //posiciones donde pueden aparecer los objetos
 
-//aseguro que los elementos no se superpongan entre ellos
+    //aseguro que los elementos no se superpongan entre ellos
     void InitializeList()
     {
         gridPositions.Clear();

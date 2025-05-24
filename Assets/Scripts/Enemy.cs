@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float moveSpeed = 1f;
+    public float moveSpeed = 0.5f;
     public float stoppingDistance = 1f;
     public int playerDamage = 10;
 
@@ -15,13 +15,20 @@ public class Enemy : MonoBehaviour
         rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         target = GameObject.FindGameObjectWithTag("Player").transform; //asigno la referencia del jugador
-// base.Start(); //mantiene el start de la clase principal
+        // base.Start(); //mantiene el start de la clase principal
     }
 
     void Update()
     {
         // Esperar hasta que el GameManager haya terminado la pantalla de carga
         if (GameManager.instance.doingSetup) return;
+
+        TypingEnemy typing = GetComponent<TypingEnemy>();
+        if (typing != null && !typing.isActive)
+        {
+            rb2D.linearVelocity = Vector2.zero;
+            return;
+        }
 
         if (target == null) return;
 
@@ -32,13 +39,13 @@ public class Enemy : MonoBehaviour
         {
             // 2) Solo mientras estemos fuera de stoppingDistance avanzamos
             Vector2 direction = (target.position - transform.position).normalized;
-            rb2D.linearVelocity      = direction * moveSpeed; // <— usa velocity en vez de linearVelocity
+            rb2D.linearVelocity = direction * moveSpeed; // <— usa velocity en vez de linearVelocity
             animator.SetTrigger("enemyMove");
 
             // Flip del sprite
             Vector3 scale = transform.localScale;
-            scale.x = direction.x > 0 
-                      ? Mathf.Abs(scale.x) 
+            scale.x = direction.x > 0
+                      ? Mathf.Abs(scale.x)
                       : -Mathf.Abs(scale.x);
             transform.localScale = scale;
         }
@@ -53,9 +60,6 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // esto solo ocurre si colisionan físicamente,
-            // y como ya no avanzamos hasta superponernos, 
-            // solo pasarás a esta parte si el Player te empuja.
             Player hitPlayer = collision.gameObject.GetComponent<Player>();
             if (hitPlayer != null)
             {
@@ -63,5 +67,19 @@ public class Enemy : MonoBehaviour
                 animator.SetTrigger("enemyAttack1");
             }
         }
+    }
+     public void ReceiveDamage(int amount)
+    {
+        animator.SetTrigger("enemyHurt");
+    }
+
+    public void TriggerAttackAnimation()
+    {
+        animator.SetTrigger("enemyAttack1");
+    }
+
+    public void TriggerDeathAnimation()
+    {
+        animator.SetTrigger("enemyDeath");
     }
 }

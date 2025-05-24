@@ -212,12 +212,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3890602125919828046}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1452eaf6b32232d40aae7e58da1d751a, type: 3}
+  m_Script: {fileID: 11500000, guid: bb657cffbddb5b44eb91e0a7e7db4314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   word: 
   textMesh: {fileID: 8398542733556865303}
   damagePerLetter: 1
+  isActive: 0
 --- !u!1 &5985680589388520946
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +322,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: mar
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

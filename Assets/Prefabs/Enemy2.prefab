@@ -212,12 +212,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3497115071068339090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1452eaf6b32232d40aae7e58da1d751a, type: 3}
+  m_Script: {fileID: 11500000, guid: bb657cffbddb5b44eb91e0a7e7db4314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   word: 
   textMesh: {fileID: 2829010999743855005}
   damagePerLetter: 1
+  isActive: 0
 --- !u!1 &3843778517060862939
 GameObject:
   m_ObjectHideFlags: 0
