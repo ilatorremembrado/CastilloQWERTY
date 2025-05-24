@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ public class Player : MonoBehaviour
     public float moveSpeed = 3f;
     public int pointsPerWord = 10;
     public float restartLevelDelay = 1f;
-    public Text foodText;
+    public Text livesText;
 
     private Rigidbody2D rb2D;
     private Animator animator;
@@ -22,7 +23,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         life = GameManager.instance.playerPoints;
-        UpdateFoodText();
+        UpdateLivesText();
     }
 
 	// se llama al método una vez por frame
@@ -58,9 +59,9 @@ public class Player : MonoBehaviour
         GameManager.instance.playerPoints = life;
     }
 
-    private void UpdateFoodText()
+    private void UpdateLivesText()
     {
-        foodText.text = "Food: " + life;
+        livesText.text = "Vidas: " + life;
     }
 
 	// comprueba si hemos llegado al final del nivel
@@ -75,10 +76,19 @@ public class Player : MonoBehaviour
     public void LoseLife(int loss)
     {
         life -= loss;
-        foodText.text = "-" + loss + " Food: " + life;
+        livesText.text = "Vidas: " + life;
         animator.SetTrigger("playerHurt");
+        StartCoroutine(FlashDamage("-" + loss));
         CheckIfGameOver();
     }
+
+    IEnumerator FlashDamage(string damageText)
+    {
+        livesText.text = damageText;
+        yield return new WaitForSeconds(0.5f);
+        livesText.text = "Vidas: " + life;
+    }
+
 
     private void Restart()
     {
@@ -96,7 +106,7 @@ public class Player : MonoBehaviour
         else if (collision.CompareTag("Food") || collision.CompareTag("Soda"))
         {
             life += pointsPerWord;
-            foodText.text = "+" + pointsPerWord + " Food: " + life;
+            livesText.text = "+" + pointsPerWord + " Food: " + life;
             collision.gameObject.SetActive(false);
         }
     }
