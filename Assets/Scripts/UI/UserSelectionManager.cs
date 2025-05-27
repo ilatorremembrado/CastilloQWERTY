@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.UI;
 using System.Text;
-using UnityEngine.SceneManagement;
 
 public class UserSelectionManager : MonoBehaviour
 {
@@ -16,12 +15,39 @@ public class UserSelectionManager : MonoBehaviour
         public string[] usuarios;
     }
 
+    [Header("Paneles")]
+    public GameObject userListPanel;
+    public GameObject loginPanel;
+    public GameObject registerPanel;
 
+    [Header("Referencias")]
     public GameObject userButtonPrefab;
+    public Button newUserButton;
     public Transform userListContainer;
+    public LoginScreenManager loginScreenManager; // ← Referencia directa
 
     void Start()
     {
+        loginPanel.SetActive(false);
+        registerPanel.SetActive(false);
+        userListPanel.SetActive(true);
+
+        newUserButton.onClick.AddListener(() =>
+        {
+            userListPanel.SetActive(false);
+            registerPanel.SetActive(true);
+        });
+
+        LoadUsers();
+    }
+
+    public void LoadUsers()
+    {
+        foreach (Transform child in userListContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
         StartCoroutine(CargarUsuarios());
     }
 
@@ -32,40 +58,32 @@ public class UserSelectionManager : MonoBehaviour
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("Error al cargar usuarios: " + request.error);
             yield break;
         }
 
-Debug.Log("✅ Respuesta JSON: " + request.downloadHandler.text);
         string json = request.downloadHandler.text;
+
         UsuarioResponse respuesta = JsonUtility.FromJson<UsuarioResponse>(json);
 
-        if (!respuesta.success)
+        if (!respuesta.success || respuesta.usuarios == null)
         {
-            Debug.LogError("Respuesta de servidor fallida.");
             yield break;
         }
-
-        Debug.Log("🧍 Usuarios recibidos: " + string.Join(", ", respuesta.usuarios));
 
         foreach (string nombre in respuesta.usuarios)
         {
-            GameObject nuevoBoton = Instantiate(userButtonPrefab, userListContainer);
-            nuevoBoton.GetComponentInChildren<TMP_Text>().text = nombre;
-            nuevoBoton.GetComponent<Button>().onClick.AddListener(() => SeleccionarUsuario(nombre));
+            GameObject bttn = Instantiate(userButtonPrefab, userListContainer);
+            bttn.GetComponentInChildren<TMP_Text>().text = nombre;
+
+            bttn.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                loginScreenManager.OpenLoginPanel(nombre); // ← uso directo
+            });
         }
     }
 
-    void SeleccionarUsuario(string nombre)
+    public void ReloadUsers()
     {
-        Debug.Log("👤 Usuario seleccionado: " + nombre);
-
-        // Puedes guardar este nombre en una variable global o GameManager
-        PlayerPrefs.SetString("usuario_seleccionado", nombre);
-        SceneManager.LoadScene("Juego");
-
-Debug.Log("🌍 Cargando escena JUEGO...");
-        // Opcional: ir a la pantalla de login para pedir la contraseña
-        // SceneManager.LoadScene("PantallaLogin");
+        LoadUsers();
     }
 }

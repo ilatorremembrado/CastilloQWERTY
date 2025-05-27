@@ -17,10 +17,7 @@ public class GameManager : MonoBehaviour
     private Text levelText;
 
     void Awake()
-    {
-
-        Debug.Log("🧠 GameManager creado en escena: " + SceneManager.GetActiveScene().name);
-        
+    {   
         //singleton: permite acceder al gamemanager desde cualquier script usando la variable instance
         if (instance == null)
         {
@@ -36,23 +33,11 @@ public class GameManager : MonoBehaviour
     
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("🌍 Escena cargada: " + scene.name);
         if (scene.name == "Juego")
         {
             InitGame();
         }
     }
-
-
-
-            private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-            {
-                if (scene.name == "Juego")
-                {
-                    level++;
-                    InitGame();
-                }
-            }
 
     public void InitGame()
     {
