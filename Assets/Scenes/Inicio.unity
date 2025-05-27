@@ -1202,6 +1202,7 @@ MonoBehaviour:
   userButtonPrefab: {fileID: 7453456965115657557, guid: 43d9458d506ee104b8d810719d16b223, type: 3}
   newUserButton: {fileID: 4152118746600663251}
   userListContainer: {fileID: 267794985}
+  loginScreenManager: {fileID: 1906290939}
 --- !u!4 &348676863
 Transform:
   m_ObjectHideFlags: 0
@@ -5160,7 +5161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb3528ae99f7dc45abeb037cb05f5cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userSelector: {fileID: 348676862}
   loginPanel: {fileID: 1478131323}
   userListPanel: {fileID: 999847361}
   confirmDeletePanel: {fileID: 687173360}
@@ -5173,6 +5173,7 @@ MonoBehaviour:
   confirmDeleteText: {fileID: 742914746}
   confirmDeleteAcceptButton: {fileID: 1286470240}
   confirmDeleteCancelButton: {fileID: 1221169145}
+  userSelector: {fileID: 348676862}
 --- !u!1 &1946704830
 GameObject:
   m_ObjectHideFlags: 0
