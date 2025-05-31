@@ -55,9 +55,6 @@ public class BoardManager : MonoBehaviour
 
         int enemyCount = Mathf.FloorToInt(Mathf.Log(level, 2f)) + 1;
         LayoutEnemiesAtEdges(enemyTiles, enemyCount);
-
-        // Aquí puedes instanciar la salida si deseas
-        // Instantiate(exitPrefab, new Vector2(columns - 1, rows - 1), Quaternion.identity);
     }
 
 // Crea el escenario inicial (suelo y borde)

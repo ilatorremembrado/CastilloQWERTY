@@ -80,7 +80,7 @@ public class FullStatsScreenManager : MonoBehaviour
         }
         else
         {
-            errorText.text = "❌ No se encontró el nombre de usuario.";
+            errorText.text = "No se encontró el nombre de usuario.";
             Debug.LogError("❌ PlayerPrefs[usuario_seleccionado] está vacío.");
         }
     }   
@@ -102,7 +102,7 @@ public class FullStatsScreenManager : MonoBehaviour
 
         if (req.result != UnityWebRequest.Result.Success)
         {
-            errorText.text = "❌ Error al conectar: " + req.error;
+            errorText.text = "Error al conectar: " + req.error;
             yield break;
         }
         Debug.Log("📨 Respuesta recibida: " + req.downloadHandler.text);
@@ -110,7 +110,7 @@ public class FullStatsScreenManager : MonoBehaviour
         StatsResponse res = JsonUtility.FromJson<StatsResponse>(req.downloadHandler.text);
         if (!res.success)
         {
-            errorText.text = "❌ Error: " + res.message;
+            errorText.text = "Error: " + res.message;
             yield break;
         }
 

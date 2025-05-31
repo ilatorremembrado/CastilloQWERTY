@@ -36,17 +36,27 @@ public class TypingEnemy : MonoBehaviour
         {
             currentLetterIndex++;
             enemy.ReceiveDamage(damagePerLetter);
+            TypingManager.instance.ContarLetraCorrecta();
+            Debug.Log("✅ Letra correcta");
+
             UpdateDisplayedText();
 
             if (currentLetterIndex >= word.Length)
+            {
+                TypingManager.instance.ContarPalabraCompletada();
+                Debug.Log("🏁 Palabra completada");
                 StartCoroutine(Die());
+            }         
         }
         else
         {
-            player.LoseLife(10);
-            enemy.TriggerAttackAnimation();
-            currentLetterIndex = 0;
-            UpdateDisplayedText();
+            TypingManager.instance.ContarLetraIncorrecta();
+    Debug.Log("❌ Letra incorrecta");
+    
+    player.LoseLife(10);
+    enemy.TriggerAttackAnimation();
+    currentLetterIndex = 0;
+    UpdateDisplayedText();
         }
     }
 

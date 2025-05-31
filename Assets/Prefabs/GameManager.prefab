@@ -70,6 +70,7 @@ MonoBehaviour:
   - {fileID: 3890602125919828046, guid: 0125c64f93c272a48a490b2266d44b31, type: 3}
   - {fileID: 3497115071068339090, guid: a6d4573c42553434390777eb375b0331, type: 3}
   - {fileID: 3906089931219618664, guid: be9f7a725500b3d4fa43488fc718f9fa, type: 3}
+  - {fileID: 7292957445274002627, guid: 7ff88fd2392994d4c99fd1d01700d328, type: 3}
 --- !u!114 &2033280871762803760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,4 +83,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3495194c8de06304f888142e847130cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPoints: 100
+  doingSetup: 0
   boardScript: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  textoDerrotaStats: {fileID: 0}
+  botonReintentar: {fileID: 0}
+  botonMenuPrincipal: {fileID: 0}
