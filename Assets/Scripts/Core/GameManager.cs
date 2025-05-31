@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     //public string nombreJugador;
 
     //los objetos referentes a la pantalla de información previa a cada partida se crean y se destruyen en cada partida para cambiar los siguientes valores
-    private int level = 0;
+    private int level = 1;
     public BoardManager boardScript; // generar niveles nuevos con instancias de BoardManager
     private GameObject levelImage;
     private Text levelText;

@@ -69,6 +69,7 @@ public class LoginScreenManager : MonoBehaviour
 
     public void OpenLoginPanel(string nombre)
     {
+        Debug.Log("➡️ OpenLoginPanel para: " + nombre);
         currentUser = nombre;
         PlayerPrefs.SetString("usuario_seleccionado", nombre);
         textIntroducePassword.text = $"Introduce la contraseña de {nombre}";
@@ -127,6 +128,9 @@ public class LoginScreenManager : MonoBehaviour
             if (res.success)
             {
                 errorText.text = "";
+                Debug.Log("✅ Login exitoso: guardando usuario: " + nombre);
+                PlayerPrefs.SetString("usuario_seleccionado", nombre);
+                PlayerPrefs.Save();
 
                 if (accesoJuego)
                 {

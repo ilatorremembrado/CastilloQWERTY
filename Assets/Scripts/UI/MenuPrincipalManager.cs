@@ -12,7 +12,10 @@ public class MenuPrincipalManager : MonoBehaviour
     public Button salirButton;
 
     [Header("Panel de Tutorial")]
-    public TutorialManager tutorialManager; // Referencia directa
+    public TutorialManager tutorialManager;
+
+    [Header("Panel de Estadísticas")]
+    public FullStatsScreenManager estadisticasManager;
 
     void Start()
     {
@@ -51,8 +54,16 @@ public class MenuPrincipalManager : MonoBehaviour
 
     void MostrarEstadisticas()
     {
-        Debug.Log("📊 Estadísticas del jugador (funcionalidad futura)");
-        // Puedes usar: SceneManager.LoadScene("Estadisticas");
+        Debug.Log("📊 Botón de estadísticas presionado");
+
+        if (estadisticasManager != null)
+        {
+            estadisticasManager.MostrarEstadisticas();
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ No se asignó TutorialManager en el inspector.");
+        }
     }
 
     void CerrarSesion()
