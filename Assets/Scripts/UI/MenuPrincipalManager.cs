@@ -8,6 +8,7 @@ public class MenuPrincipalManager : MonoBehaviour
     public Button jugarButton;
     public Button tutorialButton;
     public Button estadisticasButton;
+    public Button configuracionButton;
     public Button cerrarSesionButton;
     public Button salirButton;
 
@@ -16,6 +17,9 @@ public class MenuPrincipalManager : MonoBehaviour
 
     [Header("Panel de Estadísticas")]
     public FullStatsScreenManager estadisticasManager;
+
+    [Header("Panel de Configuración")]
+    public ConfigurationManager configuraManager;
 
     void Start()
     {
@@ -27,6 +31,9 @@ public class MenuPrincipalManager : MonoBehaviour
 
         if (estadisticasButton != null)
             estadisticasButton.onClick.AddListener(MostrarEstadisticas);
+
+        if (configuracionButton != null)
+            configuracionButton.onClick.AddListener(AbrirConfiguracion);
 
         if (cerrarSesionButton != null)
             cerrarSesionButton.onClick.AddListener(CerrarSesion);
@@ -63,6 +70,18 @@ public class MenuPrincipalManager : MonoBehaviour
         else
         {
             Debug.LogWarning("⚠️ No se asignó TutorialManager en el inspector.");
+        }
+    }
+
+    void AbrirConfiguracion()
+    {
+        if (tutorialManager != null)
+        {
+            configuraManager.MostrarConfiguracion();
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ No se asignó ConfigurationManager en el inspector.");
         }
     }
 

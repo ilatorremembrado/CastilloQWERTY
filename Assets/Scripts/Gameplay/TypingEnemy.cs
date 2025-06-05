@@ -23,7 +23,42 @@ public class TypingEnemy : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
-        word = WordGenerator.GetRandomWord();
+        if (player == null)
+        {
+            Debug.LogError("❌ No se encontró el jugador en la escena.");
+            yield break;
+        }
+
+        // Obtener dificultad desde GameManager o PlayerPrefs
+        string dificultad = GameManager.instance.GetDificultadSeleccionada();
+
+        // Elegir tipo según el nivel
+        int nivel = GameManager.instance.GetLevel();
+        string tipo = nivel < 5 ? "letra" :
+                      nivel < 10 ? "palabra" :
+                      new[] { "letra", "palabra", "frase" }[Random.Range(0, 3)];
+
+        Debug.Log($"📥 Solicitando cadena | Dificultad: {dificultad}, Tipo: {tipo}");
+
+        // Obtener palabra de base de datos
+        bool palabraRecibida = false;
+        string palabraObtenida = "ERROR";
+
+        yield return WordGenerator.GetRandomWord(dificultad, tipo, (cadena) =>
+        {
+            palabraObtenida = cadena;
+            palabraRecibida = true;
+        },
+        (error) =>
+        {
+            Debug.LogWarning($"⚠️ Error al obtener palabra: {error}");
+            palabraRecibida = true;
+        });
+
+        // Esperar hasta recibir la palabra
+        yield return new WaitUntil(() => palabraRecibida);
+
+        word = palabraObtenida;
         textMesh.text = word;
 
         TypingManager.instance.RegisterEnemy(this);

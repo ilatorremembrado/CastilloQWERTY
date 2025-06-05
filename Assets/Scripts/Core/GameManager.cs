@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public NivelStats statsUltimoNivel;
+    public PartidaStats statsPartida = new PartidaStats();
+
     public int playerPoints = 100;
     public bool doingSetup;
 
@@ -16,7 +18,10 @@ public class GameManager : MonoBehaviour
     //los objetos referentes a la pantalla de información previa a cada partida se crean y se destruyen en cada partida para cambiar los siguientes valores
     private int level = 1;
     public BoardManager boardScript; // generar niveles nuevos con instancias de BoardManager
+    public GameObject gameOverPanel;
+
     private GameObject levelImage;
+    private GameObject gameOverPanelInstance;
     private Text levelText;
     private Text textoDerrotaStats;
     private Button botonReintentar;
@@ -52,23 +57,24 @@ public class GameManager : MonoBehaviour
         doingSetup = true; // para que el jugador no se pueda mover mientras se prepara la escena
         levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText")?.GetComponent<Text>();
-
-        textoDerrotaStats = GameObject.Find("OverText")?.GetComponent<Text>();
-        botonReintentar = GameObject.Find("ReintentarButton")?.GetComponent<Button>();
-        botonMenuPrincipal = GameObject.Find("MenuButton")?.GetComponent<Button>();
-
+        /*
+                textoDerrotaStats = GameObject.Find("OverText")?.GetComponent<Text>();
+                botonReintentar = GameObject.Find("ReplayButton")?.GetComponent<Button>();
+                botonMenuPrincipal = GameObject.Find("MenuButton")?.GetComponent<Button>();
+        */
         if (botonMenuPrincipal != null)
         {
             botonMenuPrincipal.gameObject.SetActive(false);
+            Debug.Log("SIIIIIIIIIIIIIIIIIIIIIIII");
         }
         else
         {
-            Debug.Log("no se encuentran los botones");
+            Debug.Log("NOOOOOOOOOOOOOOOOOOOOOOO");
         }
-
-        if (botonReintentar != null) botonReintentar.gameObject.SetActive(false);
-        if (textoDerrotaStats != null) textoDerrotaStats.gameObject.SetActive(false);
-
+        /*
+                if (botonReintentar != null) botonReintentar.gameObject.SetActive(false);
+                if (textoDerrotaStats != null) textoDerrotaStats.gameObject.SetActive(false);
+        */
         if (levelText != null) levelText.text = "Nivel: " + level;
         if (levelImage != null) levelImage.SetActive(true);
 
@@ -76,7 +82,7 @@ public class GameManager : MonoBehaviour
         boardScript = GetComponent<BoardManager>();
         if (boardScript != null) boardScript.SetupScene(level);
 
-            //en (levelStartDelay) segundos se genera el método (HideLevelImage)
+        //en (levelStartDelay) segundos se genera el método (HideLevelImage)
         Invoke("HideLevelImage", 2f);
     }
 
@@ -92,33 +98,47 @@ public class GameManager : MonoBehaviour
 
         GuardarPartida();
 
+        // Instanciar el panel desde el prefab
+        gameOverPanelInstance = Instantiate(gameOverPanel, Vector3.zero, Quaternion.identity);
 
-        if (levelText != null) levelText.text = "";
-        
-        if (botonMenuPrincipal != null) botonMenuPrincipal.gameObject.SetActive(true);
-        if (botonReintentar != null) botonReintentar.gameObject.SetActive(true);
-        if (textoDerrotaStats != null) textoDerrotaStats.gameObject.SetActive(true);
+        // Asegurar que se añada al Canvas
+        gameOverPanelInstance.transform.SetParent(GameObject.Find("Canvas").transform, false);
 
+        // Buscar los botones hijos del panel instanciado
+        textoDerrotaStats = gameOverPanelInstance.transform.Find("OverText")?.GetComponent<Text>();
+        botonReintentar = gameOverPanelInstance.transform.Find("ReplayButton")?.GetComponent<Button>();
+        botonMenuPrincipal = gameOverPanelInstance.transform.Find("MenuButton")?.GetComponent<Button>();
 
-        if (statsUltimoNivel != null && textoDerrotaStats != null)
+        if (TypingManager.instance != null)
         {
-            string resumen = $"Después de {level} niveles, te derrotaron\n" +
-                            $"<b>Palabras:</b> {statsUltimoNivel.palabras}\n" +
-                            $"<b>Correctas:</b> {statsUltimoNivel.letrasCorrectas}\n" +
-                            $"<b>Errores:</b> {statsUltimoNivel.letrasIncorrectas}\n" +
-                            $"<b>Precisión:</b> {statsUltimoNivel.precision:F1}%\n" +
-                            $"<b>Velocidad:</b> {statsUltimoNivel.velocidad:F1} ppm";
+            statsUltimoNivel = TypingManager.instance.ObtenerEstadisticasActuales();
+            float duracion = TypingManager.instance.ObtenerDuracion();
+
+            statsPartida.Agregar(statsUltimoNivel, duracion);
+        }
+
+
+        if (statsPartida != null && textoDerrotaStats != null)
+        {
+            float precision = statsPartida.CalcularPrecision();
+            float velocidad = statsPartida.CalcularVelocidad();
+
+            string resumen = $"<b>⚰️ Derrota tras el nivel {level}</b>\n\n" +
+                            $"<b>Palabras totales:</b> {statsPartida.totalPalabras}\n" +
+                            $"<b>Letras correctas:</b> {statsPartida.totalLetrasCorrectas}\n" +
+                            $"<b>Letras incorrectas:</b> {statsPartida.totalLetrasIncorrectas}\n" +
+                            $"<b>Precisión:</b> {precision:F1}%\n" +
+                            $"<b>Velocidad media:</b> {velocidad:F1} ppm";
 
             textoDerrotaStats.text = resumen;
 
 
             if (botonReintentar != null)
-                botonReintentar.onClick.AddListener(ReintentarNivel);
+                botonReintentar.onClick.AddListener(Reintentar);
 
             if (botonMenuPrincipal != null)
                 botonMenuPrincipal.onClick.AddListener(IrAlMenu);
         }
-         if (levelImage != null) levelImage.SetActive(true);
         Time.timeScale = 0f;
     }
 
@@ -162,10 +182,18 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Juego");
     }
 
-    public void ReintentarNivel()
+    public void Reintentar()
     {
         Debug.Log("🔄 Reintentando el nivel...");
         Time.timeScale = 1f;
+
+        // Reiniciar valores de juego
+        playerPoints = 100;
+        level = 1;
+        statsUltimoNivel = null;
+        statsPartida = new PartidaStats(); // Reiniciar estadísticas acumuladas
+
+
         SceneManager.LoadScene("Juego");
     }
 
@@ -173,11 +201,31 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("🏠 Volviendo al menú principal...");
         Time.timeScale = 1f;
-        level = 1; // O reiniciar progreso si lo deseas
+
+        // Reiniciar progreso
+        level = 1;
+        playerPoints = 100;
+        statsUltimoNivel = null;
+        statsPartida = new PartidaStats(); // Reiniciar estadísticas acumulada
+
         SceneManager.LoadScene("MenuPrincipal");
     }
+    public string GetDificultadSeleccionada()
+    {
+        return PlayerPrefs.GetString("dificultad_seleccionada", "fácil"); // por defecto "facil"
+    }
 
-
+    public string GetTipoPorNivel()
+    {
+        int nivel = GetLevel();
+        if (nivel <= 5) return "letra";
+        else if (nivel <= 10) return "palabra";
+        else
+        {
+            int r = UnityEngine.Random.Range(0, 3);
+            return r == 0 ? "letra" : r == 1 ? "palabra" : "frase";
+        }
+    }
 }
 
 //clase auxiliar
@@ -188,4 +236,32 @@ public class NivelStats
     public int letrasIncorrectas;
     public float velocidad;
     public float precision;
+}
+
+//clase auxiliar para acumular los datos
+public class PartidaStats
+{
+    public int totalPalabras = 0;
+    public int totalLetrasCorrectas = 0;
+    public int totalLetrasIncorrectas = 0;
+    public float tiempoTotal = 0f;
+
+    public void Agregar(NivelStats nivel, float duracionNivel)
+    {
+        totalPalabras += nivel.palabras;
+        totalLetrasCorrectas += nivel.letrasCorrectas;
+        totalLetrasIncorrectas += nivel.letrasIncorrectas;
+        tiempoTotal += duracionNivel;
+    }
+
+    public float CalcularPrecision()
+    {
+        int total = totalLetrasCorrectas + totalLetrasIncorrectas;
+        return total > 0 ? (totalLetrasCorrectas / (float)total) * 100f : 100f;
+    }
+
+    public float CalcularVelocidad()
+    {
+        return tiempoTotal > 0f ? totalPalabras / (tiempoTotal / 60f) : 0f;
+    }
 }

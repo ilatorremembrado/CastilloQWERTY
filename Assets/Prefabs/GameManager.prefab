@@ -86,7 +86,7 @@ MonoBehaviour:
   playerPoints: 100
   doingSetup: 0
   boardScript: {fileID: 0}
-  gameOverPanel: {fileID: 0}
+  gameOverPanel: {fileID: 18696031213277354, guid: 8ae70bb012366fc4e9cf453d2adb388d, type: 3}
   textoDerrotaStats: {fileID: 0}
   botonReintentar: {fileID: 0}
   botonMenuPrincipal: {fileID: 0}

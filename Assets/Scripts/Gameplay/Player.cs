@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
+            if (life > 0) // Solo guarda si sigue vivo
         GameManager.instance.playerPoints = life;
     }
 

@@ -30,9 +30,6 @@ public class TutorialManager : MonoBehaviour
         // Asignar eventos a botones
         buttonCerrar.onClick.AddListener(CerrarTutorial);
         buttonSiguiente.onClick.AddListener(CambiarTutorial);
-
-        // (Opcional) Si quieres que arranque activo para pruebas
-        // MostrarTutorial();
     }
 
     public void MostrarTutorial()

@@ -19,6 +19,7 @@ public class UserSelectionManager : MonoBehaviour
     public GameObject userListPanel;
     public GameObject loginPanel;
     public GameObject registerPanel;
+    public Button exitButton;
 
     [Header("Referencias")]
     public GameObject userButtonPrefab;
@@ -36,6 +37,16 @@ public class UserSelectionManager : MonoBehaviour
         {
             userListPanel.SetActive(false);
             registerPanel.SetActive(true);
+        });
+
+        exitButton.onClick.AddListener(() =>
+        {
+            Application.Quit();
+
+            #if UNITY_EDITOR
+                    // Esto es solo para detener el juego en el editor de Unity
+                    UnityEditor.EditorApplication.isPlaying = false;
+            #endif
         });
 
         LoadUsers();

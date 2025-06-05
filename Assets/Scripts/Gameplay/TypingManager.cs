@@ -17,6 +17,10 @@ public class TypingManager : MonoBehaviour
     private int palabrasCompletadas = 0;
     private float tiempoInicio = 0f;
 
+    public int PalabrasCompletadas => palabrasCompletadas;
+    public int LetrasCorrectas => letrasCorrectas;
+    public int LetrasIncorrectas => letrasIncorrectas;
+
     void Awake()
     {
         if (instance == null) instance = this;
@@ -83,6 +87,14 @@ Debug.Log($"Velocidad: {CalcularVelocidad():F2} ppm");
                 velocidad = CalcularVelocidad(),
                 precision = CalcularPrecision()
             };
+            
+            // Acumular en statsPartida
+            float duracionNivel = Time.time - tiempoInicio;
+            GameManager.instance.statsPartida.Agregar(GameManager.instance.statsUltimoNivel, duracionNivel);
+
+            // Reiniciar el tiempo para el siguiente nivel
+            tiempoInicio = Time.time;
+
             if (victoryPanel != null)
             {
                 victoryPanel.SetActive(true);
@@ -99,13 +111,31 @@ Debug.Log($"Velocidad: {CalcularVelocidad():F2} ppm");
 
                 if (statsText != null)
                     statsText.text = resumen;
-                    Debug.Log("✅ StatsText actualizado con el siguiente resumen:");
-Debug.Log(resumen);
+                Debug.Log("✅ StatsText actualizado con el siguiente resumen:");
+                Debug.Log(resumen);
             }
 
             // Inicia transición de nivel
             GameManager.instance.StartCoroutine(GameManager.instance.IrAlSiguienteNivel());
         }
+    }
+
+    public NivelStats ObtenerEstadisticasActuales()
+    {
+        float duracion = Time.time - tiempoInicio;
+        return new NivelStats
+        {
+            palabras = palabrasCompletadas,
+            letrasCorrectas = letrasCorrectas,
+            letrasIncorrectas = letrasIncorrectas,
+            velocidad = CalcularVelocidad(),
+            precision = CalcularPrecision()
+        };
+    }
+
+    public float ObtenerDuracion()
+    {
+        return Time.time - tiempoInicio;
     }
     
     // MÉTRICAS
