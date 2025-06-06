@@ -70,6 +70,7 @@ public class Player : MonoBehaviour
     {
         if (life <= 0)
         {
+            SoundManager.instance.PlaySound(SoundManager.instance.deathPlayerSound);
             GameManager.instance.GameOver();
         }
     }
@@ -90,25 +91,14 @@ public class Player : MonoBehaviour
         livesText.text = "Vidas: " + life;
     }
 
+    public void GainLife(int amount)
+    {
+        life += amount;
+        UpdateLivesText();
+    }
 
     private void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-	// futuras implementaciones con alimentos o recompensas
-    /*private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Exit"))
-        {
-            Invoke("Restart", restartLevelDelay);
-            enabled = false;
-        }
-        else if (collision.CompareTag("Food") || collision.CompareTag("Soda"))
-        {
-            life += pointsPerWord;
-            livesText.text = "+" + pointsPerWord + " Food: " + life;
-            collision.gameObject.SetActive(false);
-        }
-    }*/
 }

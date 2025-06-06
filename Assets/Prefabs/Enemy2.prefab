@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2504796415192985240}
   - component: {fileID: -1281742807442323000}
   - component: {fileID: 5944809226090836681}
+  - component: {fileID: -2872264387586132631}
   m_Layer: 8
   m_Name: Enemy2
   m_TagString: Enemy
@@ -200,9 +201,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83717fa414cc58e48a6c115b29529cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  stoppingDistance: 1
-  playerDamage: 10
+  moveSpeed: 1
+  stoppingDistance: 0.5
+  playerDamage: 2
+  damageInterval: 4
 --- !u!114 &5944809226090836681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +220,43 @@ MonoBehaviour:
   word: 
   textMesh: {fileID: 2829010999743855005}
   damagePerLetter: 1
-  isActive: 0
+  isActive: 1
+--- !u!58 &-2872264387586132631
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3497115071068339090}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &3843778517060862939
 GameObject:
   m_ObjectHideFlags: 0

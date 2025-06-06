@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
     {
         // prepara la pantalla prejuego
         doingSetup = true; // para que el jugador no se pueda mover mientras se prepara la escena
+
         levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText")?.GetComponent<Text>();
         /*
@@ -65,16 +66,8 @@ public class GameManager : MonoBehaviour
         if (botonMenuPrincipal != null)
         {
             botonMenuPrincipal.gameObject.SetActive(false);
-            Debug.Log("SIIIIIIIIIIIIIIIIIIIIIIII");
         }
-        else
-        {
-            Debug.Log("NOOOOOOOOOOOOOOOOOOOOOOO");
-        }
-        /*
-                if (botonReintentar != null) botonReintentar.gameObject.SetActive(false);
-                if (textoDerrotaStats != null) textoDerrotaStats.gameObject.SetActive(false);
-        */
+
         if (levelText != null) levelText.text = "Nivel: " + level;
         if (levelImage != null) levelImage.SetActive(true);
 
@@ -95,12 +88,14 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         doingSetup = true;
+        SoundManager.instance.PlaySound(SoundManager.instance.deathPlayerSound);
+
+        LogrosManager.instance.RevisarLogros();
 
         GuardarPartida();
 
         // Instanciar el panel desde el prefab
         gameOverPanelInstance = Instantiate(gameOverPanel, Vector3.zero, Quaternion.identity);
-
         // Asegurar que se añada al Canvas
         gameOverPanelInstance.transform.SetParent(GameObject.Find("Canvas").transform, false);
 
@@ -123,7 +118,7 @@ public class GameManager : MonoBehaviour
             float precision = statsPartida.CalcularPrecision();
             float velocidad = statsPartida.CalcularVelocidad();
 
-            string resumen = $"<b>⚰️ Derrota tras el nivel {level}</b>\n\n" +
+            string resumen = $"<b>Derrota tras el nivel {level}</b>\n\n" +
                             $"<b>Palabras totales:</b> {statsPartida.totalPalabras}\n" +
                             $"<b>Letras correctas:</b> {statsPartida.totalLetrasCorrectas}\n" +
                             $"<b>Letras incorrectas:</b> {statsPartida.totalLetrasIncorrectas}\n" +
@@ -135,9 +130,11 @@ public class GameManager : MonoBehaviour
 
             if (botonReintentar != null)
                 botonReintentar.onClick.AddListener(Reintentar);
+            SoundManager.instance.PlaySound(SoundManager.instance.buttonClick);
 
             if (botonMenuPrincipal != null)
                 botonMenuPrincipal.onClick.AddListener(IrAlMenu);
+                SoundManager.instance.PlaySound(SoundManager.instance.buttonClick);
         }
         Time.timeScale = 0f;
     }
@@ -159,13 +156,27 @@ public class GameManager : MonoBehaviour
             precision = precision
         };
 
-        // Llamada a la API
+        if (TypingManager.instance != null)
+        {
+            statsUltimoNivel = TypingManager.instance.ObtenerEstadisticasActuales();
+            float duracion = TypingManager.instance.ObtenerDuracion();
+
+            statsPartida.Agregar(statsUltimoNivel, duracion);
+        }
+
+        // Usar los datos acumulados de toda la partida, no del último nivel
+        datos.palabras = statsPartida.totalPalabras;
+        datos.errores = statsPartida.totalLetrasIncorrectas;
+        datos.duracion = Mathf.RoundToInt(statsPartida.tiempoTotal);
+
         MonoBehaviour mono = Object.FindFirstObjectByType<Player>();
         mono.StartCoroutine(PartidaAPI.EnviarPartida(datos, (ok, msg) =>
         {
             Debug.Log(ok ? "✅ Partida registrada" : "❌ Error registrando partida: " + msg);
         }));
     }
+
+
 
     public int GetLevel() => level;
     public string GetPlayerName() => PlayerPrefs.GetString("usuario_seleccionado");
@@ -218,8 +229,8 @@ public class GameManager : MonoBehaviour
     public string GetTipoPorNivel()
     {
         int nivel = GetLevel();
-        if (nivel <= 5) return "letra";
-        else if (nivel <= 10) return "palabra";
+        if (nivel < 5) return "letra";
+        else if (nivel < 10) return "palabra";
         else
         {
             int r = UnityEngine.Random.Range(0, 3);

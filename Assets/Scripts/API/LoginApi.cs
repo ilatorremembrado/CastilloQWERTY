@@ -3,6 +3,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
 
+public static class ApiConfig
+{
+#if UNITY_EDITOR || DEVELOPMENT_BUILD          
+    public const string BASE_URL = "http://localhost/castillo_qwerty_api/";   // IP o URL temporal para unity
+#else                                          
+    public const string BASE_URL = "https://castilloqwerty.oo.gd/";      // Dominio ya propagado
+#endif
+}
+
 public class LoginAPI : MonoBehaviour
 {
     [System.Serializable]
@@ -29,7 +38,7 @@ public class LoginAPI : MonoBehaviour
         LoginData data = new LoginData { nombre = nombre, password = clave };
         string json = JsonUtility.ToJson(data);
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/login.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}login.php", "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
         req.uploadHandler = new UploadHandlerRaw(bodyRaw);
         req.downloadHandler = new DownloadHandlerBuffer();

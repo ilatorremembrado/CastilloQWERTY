@@ -92,7 +92,7 @@ public class FullStatsScreenManager : MonoBehaviour
         Debug.Log("📡 Enviando JSON a get_full_stats.php: " + json);
 
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/get_full_stats.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}get_full_stats.php", "POST");
         byte[] body = Encoding.UTF8.GetBytes(json);
         req.uploadHandler = new UploadHandlerRaw(body);
         req.downloadHandler = new DownloadHandlerBuffer();

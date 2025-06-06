@@ -5,7 +5,7 @@ using System;
 
 public static class WordGenerator
 {
-     private const string URL = "http://localhost/castillo_qwerty_api/get_cadena.php";
+     private const string URL = ApiConfig.BASE_URL + "get_cadena.php";
     // Llamada asíncrona desde TypingEnemy
     public static IEnumerator GetRandomWord(string dificultad, string tipo, Action<string> onSuccess, Action<string> onError = null)
     {

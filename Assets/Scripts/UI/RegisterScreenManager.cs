@@ -70,7 +70,7 @@ public class RegisterScreenManager : MonoBehaviour
         RegisterRequest data = new RegisterRequest { nombre = nombre, password = clave };
         string json = JsonUtility.ToJson(data);
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/register.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}register.php", "POST");
         byte[] body = Encoding.UTF8.GetBytes(json);
         req.uploadHandler = new UploadHandlerRaw(body);
         req.downloadHandler = new DownloadHandlerBuffer();

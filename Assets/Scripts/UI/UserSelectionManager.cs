@@ -64,7 +64,7 @@ public class UserSelectionManager : MonoBehaviour
 
     IEnumerator CargarUsuarios()
     {
-        UnityWebRequest request = UnityWebRequest.Get("http://localhost/castillo_qwerty_api/get_users.php");
+        UnityWebRequest request = UnityWebRequest.Get($"{ApiConfig.BASE_URL}get_users.php");
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)

@@ -64,8 +64,19 @@ MonoBehaviour:
   - {fileID: 1890833367934865474, guid: 47ba6608409fef14ba709d0d3dd092d9, type: 3}
   - {fileID: 1078353585153130931, guid: 6811843e351d97744bd3f72ff9c03c97, type: 3}
   - {fileID: 7756383699499903115, guid: 747a59c7cb195f745801b544f10983f8, type: 3}
+  - {fileID: 7945296638834559882, guid: 4a5c4f941cacdc044b08c5ab6fcc803f, type: 3}
+  - {fileID: 7136858118632959195, guid: 89798ab527cd3594c873f599b625ed80, type: 3}
+  - {fileID: 8513710061832299351, guid: c456ef721fdac9e409b4f08c2f33f41c, type: 3}
+  - {fileID: 6422945947659932726, guid: 94fd9cc0dfc158e41877fc01f3a90ca8, type: 3}
+  - {fileID: 7781312326146159032, guid: ca49824f9bc46bc4abd4af9755f62191, type: 3}
   outerWallTiles:
   - {fileID: 5301543841714018180, guid: 223b44c6c98297347bd7c09abe474624, type: 3}
+  - {fileID: 7932004644498630523, guid: 0712cdab8420f9347851b170abd95cf7, type: 3}
+  - {fileID: 1062148694311660716, guid: 4bdd3d16f73f13b4b914f03753ed72fd, type: 3}
+  - {fileID: 899616433071053720, guid: b9ef81aeb31fa7f4096d376d3868d084, type: 3}
+  - {fileID: 8290496339283629802, guid: d85c51802c3394741befee6ea3b130ac, type: 3}
+  - {fileID: 4006022158325027597, guid: 00d0395b34388034d8cc9878de6c2677, type: 3}
+  - {fileID: 2755968286450609959, guid: c5684057c8707044480135223253d3ed, type: 3}
   enemyTiles:
   - {fileID: 3890602125919828046, guid: 0125c64f93c272a48a490b2266d44b31, type: 3}
   - {fileID: 3497115071068339090, guid: a6d4573c42553434390777eb375b0331, type: 3}
@@ -87,6 +98,3 @@ MonoBehaviour:
   doingSetup: 0
   boardScript: {fileID: 0}
   gameOverPanel: {fileID: 18696031213277354, guid: 8ae70bb012366fc4e9cf453d2adb388d, type: 3}
-  textoDerrotaStats: {fileID: 0}
-  botonReintentar: {fileID: 0}
-  botonMenuPrincipal: {fileID: 0}

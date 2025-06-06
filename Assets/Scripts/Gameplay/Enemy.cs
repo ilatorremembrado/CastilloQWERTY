@@ -1,14 +1,20 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float moveSpeed = 0.5f;
+    public float moveSpeed = 1f;
     public float stoppingDistance = 1f;
-    public int playerDamage = 10;
+    public int playerDamage = 5;
+    public float damageInterval = 3f;
 
     private Transform target;
     private Rigidbody2D rb2D;
     private Animator animator;
+
+    private bool isTouchingPlayer = false;
+    private Coroutine damageCoroutine;
+
 
     void Start()
     {
@@ -56,18 +62,44 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    // Cuando entra en contacto con el jugador
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            Player hitPlayer = collision.gameObject.GetComponent<Player>();
-            if (hitPlayer != null)
+            isTouchingPlayer = true;
+            if (damageCoroutine == null)
             {
-                hitPlayer.LoseLife(playerDamage);
-                animator.SetTrigger("enemyAttack1");
+                damageCoroutine = StartCoroutine(DamageOverTime(other.GetComponent<Player>()));
             }
         }
     }
+
+    // Cuando se aleja del jugador
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isTouchingPlayer = false;
+            if (damageCoroutine != null)
+            {
+                StopCoroutine(damageCoroutine);
+                damageCoroutine = null;
+            }
+        }
+    }
+
+    private IEnumerator DamageOverTime(Player player)
+    {
+        while (isTouchingPlayer && player != null)
+        {
+            player.LoseLife(playerDamage);
+            SoundManager.instance.PlaySound(SoundManager.instance.hurtPlayerSound);
+            animator.SetTrigger("enemyAttack1");
+            yield return new WaitForSeconds(damageInterval);
+        }
+    }
+    
      public void ReceiveDamage(int amount)
     {
         animator.SetTrigger("enemyHurt");

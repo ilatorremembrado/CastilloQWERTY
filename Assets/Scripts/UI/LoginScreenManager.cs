@@ -110,7 +110,7 @@ public class LoginScreenManager : MonoBehaviour
         LoginRequest data = new LoginRequest { nombre = nombre, password = password };
         string json = JsonUtility.ToJson(data);
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/login.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}login.php", "POST");
         byte[] body = Encoding.UTF8.GetBytes(json);
         req.uploadHandler = new UploadHandlerRaw(body);
         req.downloadHandler = new DownloadHandlerBuffer();
@@ -158,7 +158,7 @@ public class LoginScreenManager : MonoBehaviour
     {
         string json = JsonUtility.ToJson(new DeleteUserRequest(nombre));
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/delete_user.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}delete_user.php", "POST");
         byte[] body = Encoding.UTF8.GetBytes(json);
         req.uploadHandler = new UploadHandlerRaw(body);
         req.downloadHandler = new DownloadHandlerBuffer();

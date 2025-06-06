@@ -98,6 +98,7 @@ Debug.Log($"Velocidad: {CalcularVelocidad():F2} ppm");
             if (victoryPanel != null)
             {
                 victoryPanel.SetActive(true);
+                SoundManager.instance.PlaySound(SoundManager.instance.passLevelSound);
 
                 float velocidad = CalcularVelocidad();
                 float precision = CalcularPrecision();

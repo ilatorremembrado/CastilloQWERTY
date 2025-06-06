@@ -29,7 +29,7 @@ public class RegisterAPI : MonoBehaviour
         RegisterData data = new RegisterData { nombre = nombre, password = clave };
         string json = JsonUtility.ToJson(data);
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/register.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}register.php", "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
         req.uploadHandler = new UploadHandlerRaw(bodyRaw);
         req.downloadHandler = new DownloadHandlerBuffer();

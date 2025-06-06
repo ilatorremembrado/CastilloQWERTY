@@ -31,7 +31,7 @@ public static class UserAPI
         LoginData data = new LoginData { nombre = nombre, password = password };
         string json = JsonUtility.ToJson(data);
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/login.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}/login.php", "POST");
         req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
         req.downloadHandler = new DownloadHandlerBuffer();
         req.SetRequestHeader("Content-Type", "application/json");
@@ -54,7 +54,7 @@ public static class UserAPI
         LoginData data = new LoginData { nombre = nombre, password = password };
         string json = JsonUtility.ToJson(data);
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/register.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}register.php", "POST");
         req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
         req.downloadHandler = new DownloadHandlerBuffer();
         req.SetRequestHeader("Content-Type", "application/json");

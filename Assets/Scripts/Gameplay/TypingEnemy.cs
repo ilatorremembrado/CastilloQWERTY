@@ -71,6 +71,7 @@ public class TypingEnemy : MonoBehaviour
         {
             currentLetterIndex++;
             enemy.ReceiveDamage(damagePerLetter);
+            SoundManager.instance.PlaySound(SoundManager.instance.letterCorrectSound);
             TypingManager.instance.ContarLetraCorrecta();
             Debug.Log("✅ Letra correcta");
 
@@ -88,7 +89,7 @@ public class TypingEnemy : MonoBehaviour
             TypingManager.instance.ContarLetraIncorrecta();
     Debug.Log("❌ Letra incorrecta");
     
-    player.LoseLife(10);
+    player.LoseLife(enemy.playerDamage);
     enemy.TriggerAttackAnimation();
     currentLetterIndex = 0;
     UpdateDisplayedText();
@@ -105,6 +106,7 @@ public class TypingEnemy : MonoBehaviour
     IEnumerator Die()
     {
         enemy.TriggerDeathAnimation();
+        SoundManager.instance.PlaySound(SoundManager.instance.deathEnemySound);
         yield return new WaitForSeconds(1f);
         Destroy(gameObject);
         TypingManager.instance.SelectNextEnemy();

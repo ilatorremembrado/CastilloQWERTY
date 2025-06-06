@@ -14,13 +14,17 @@ public static class PartidaAPI
         public int puntuacion;
         public float velocidad;
         public float precision;
+
+        public int palabras;
+        public int errores;
+        public int duracion;
     }
 
     public static IEnumerator EnviarPartida(PartidaRequest datos, Action<bool, string> callback)
     {
         string json = JsonUtility.ToJson(datos);
 
-        UnityWebRequest req = new UnityWebRequest("http://localhost/castillo_qwerty_api/insert_partida.php", "POST");
+        UnityWebRequest req = new UnityWebRequest($"{ApiConfig.BASE_URL}insert_partida.php", "POST");
         byte[] body = Encoding.UTF8.GetBytes(json);
         req.uploadHandler = new UploadHandlerRaw(body);
         req.downloadHandler = new DownloadHandlerBuffer();
